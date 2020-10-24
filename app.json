@@ -1,0 +1,12 @@
+{
+  "name": "binimise",
+  "displayName": "binimise",
+  "expo": {
+    "name": "binimise",
+    "slug": "binimise",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
