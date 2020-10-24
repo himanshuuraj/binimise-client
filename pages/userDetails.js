@@ -6,6 +6,7 @@ import { View, Text, Touch, TextInput } from "./../ui-kit";
 import { Actions } from 'react-native-router-flux';
 import Header from "./../components/header";
 import { updateUserData, getAllAreas, updateUserInArea, updateMapAreaCodeAndDriver } from "./../repo/repo";
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 
 let { height } = Dimensions.get('window');
 
@@ -116,7 +117,7 @@ export default () => {
     }
 
     driverLayout = () => {
-        if (state.userType !== "driver") return null;
+        // if (state.userType !== "driver") return null;
         return <View>
             <Text t={'Truck Name'} />
             <TextInput ml nl={2} uc={"#bbb"} ph="Truck Name" pl={16}
@@ -129,13 +130,14 @@ export default () => {
         </View>;
     }
 
-    return <View pl={16} pr={16}>
+    return <KeyboardAwareScrollView>
         {
             userInfo?.name ? <View row ai c={"#fff"} ai w={"100%"} h={60} >
                 <Header />
             </View> : null
         }
-        <View jc ai h={height}>
+        <View jc ai pl={16} pr={16}>
+            <View h={100} />
             <Text b s={18} t={"DETAILS"} />
             <View pt={16} pb={8} ph={8} w={'100%'}>
                 <Text t={'Name'} />
@@ -176,7 +178,7 @@ export default () => {
                         })
                     }
                 </Picker>
-                <Text t={'User or Driver'} />
+                {/* <Text t={'User or Driver'} /> */}
                 {/* <Picker
                     selectedValue={state.userType}
                     style={{ height: 50, width: "100%" }}
@@ -196,5 +198,5 @@ export default () => {
                     }} s={16} c={"#fff"} t={'SUBMIT'}/>
             </View>
         </View>
-    </View>
+    </KeyboardAwareScrollView>
 }
