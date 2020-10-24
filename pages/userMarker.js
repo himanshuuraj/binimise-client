@@ -28,7 +28,7 @@ export default props => {
         });
     }
 
-    if(driverLocations === null || Object.keys(driverLocations).length === 0)
+    if(driverLocations == null || Object.keys(driverLocations).length === 0)
         return null;
 
     return ( <View> 
