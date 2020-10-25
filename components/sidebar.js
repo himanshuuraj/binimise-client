@@ -45,6 +45,7 @@ export default () => {
                                     if(item.id == "logout") {
                                         AsyncStorage.clear();
                                         Actions.loginPage();
+                                        setDataAction({sidebar : { show : false}});
                                         return;
                                     }
                                     Actions[item.id]();
