@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {Image} from "react-native";
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import { View } from "./../ui-kit";
@@ -35,8 +36,8 @@ export default props => {
                 <MapView.Marker
                     coordinate={location.coords}
                     title="My Marker"
-                    description="Some description"
-                    image={orangeMarkerImg}
-                    />
+                    description="Some description">
+                      <Image source={require('./../assets/car.png')} style={{ width: 30, height: 30 }} />
+                    </MapView.Marker>
             </View>
 }
