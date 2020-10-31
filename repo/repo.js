@@ -61,17 +61,17 @@ const getAllAreas = () => {
 } 
 
 const updateUserInArea = userInfo => {
-    let usersRef = dbRef.child('areaCode/' + userInfo.areaCode + "/" + getCurrentDate() + "/users/" + userInfo.phoneNumber);
+    let usersRef = dbRef.child('areaCode/' + userInfo.areaCode + "/users/" + userInfo.phoneNumber);
     return usersRef.update(userInfo).then(() => {}).catch(() => {})
 }
 
 const updateUserToken = (userInfo, token) => {
-    let usersRef = dbRef.child('areaCode/' + userInfo.areaCode + "/" + getCurrentDate() + "/users/" + userInfo.phoneNumber);
+    let usersRef = dbRef.child("users/" + userInfo.phoneNumber + "/profile");
     return usersRef.update({token}).then(() => {}).catch(() => {})
 }
 
 const updateUserLocationInWard = (userInfo, lat, long) => {
-    let usersRef = dbRef.child('areaCode/' + userInfo.areaCode + "/" + getCurrentDate() + "/users/" + userInfo.phoneNumber + "/latLong");
+    let usersRef = dbRef.child("users/" + userInfo.phoneNumber + "/location");
     let latLong = {
         lat : lat,
         long : long

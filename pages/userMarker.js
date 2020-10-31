@@ -29,15 +29,13 @@ export default props => {
 
     return ( <View> 
         {
-            Object.entries(driverLocations).filter(item => {
-                console.log(item[1]?.status?.status);
-                    return item[1]?.status?.status == true;
-            }).map((item, index) => (
+            Object.entries(driverLocations).filter(item => item[1]?.status?.status == true)
+            .map((item, index) => (
                 <View key={index}>
                     <MapView.Marker
                         coordinate={{
-                            latitude: item[1].location?.real_time?.lat,
-                            longitude: item[1].location?.real_time?.long
+                            latitude: item[1]?.location?.real_time?.lat || 25.85,
+                            longitude: item[1]?.location?.real_time?.long || 35.85
                         }}>
                         <Image source={require('./../assets/car.png')} style={{ width: 30, height: 30 }} />
                     </MapView.Marker>

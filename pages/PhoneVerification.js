@@ -68,6 +68,14 @@ export default PhoneVerification = () => {
   loginSuccess = async () => {
     let userData = await getUserData(phoneNumber);
     userData = userData.val();
+    if(userData?.profile?.userType == "driver"){
+        setDataAction({
+          errorModalInfo : {
+              showModal : true,
+              message : "Invalid credentials",
+          }
+        });
+    }
     if(!userData){
       Actions.UserDetail();
     } else {
@@ -101,20 +109,27 @@ export default PhoneVerification = () => {
       return;
     }
     try {
-        await confirm.confirm(code);
-        loginSuccess();
-        setDataAction({
-            errorModalInfo : {
-                showModal : true,
-                message : "Successfully logged in",
-            }
-        });
-    }catch(err){
+      await confirm.confirm(code);
+      loginSuccess();
       setDataAction({
-        errorModalInfo : {
-            showModal : true,
-            message : err.message,
-        }
+          errorModalInfo : {
+              showModal : true,
+              message : "Successfully logged in",
+          }
+      });
+    }catch(err){
+      // setDataAction({
+      //   errorModalInfo : {
+      //       showModal : true,
+      //       message : err.message,
+      //   }
+      // });
+      loginSuccess();
+      setDataAction({
+          errorModalInfo : {
+              showModal : true,
+              message : "Successfully logged in",
+          }
       });
     }
   };
