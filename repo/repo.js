@@ -1,5 +1,6 @@
 import firebase from "./../repo/firebase";
 import { getCurrentDate } from "./../global/util";
+import { Alert } from "react-native";
 
 // alert(firebase().database);
 let dbRef = firebase().database().ref('/');
@@ -70,13 +71,13 @@ const updateUserToken = (userInfo, token) => {
     return usersRef.update({token}).then(() => {}).catch(() => {})
 }
 
-const updateUserLocationInWard = (userInfo, lat, long) => {
+const updateUserLocationInWard = async (userInfo, lat, long) => {
     let usersRef = dbRef.child("users/" + userInfo.phoneNumber + "/location");
-    let latLong = {
-        lat : lat,
-        long : long
+    let data = await usersRef.once('value', data => data);
+    data = data.val();
+    if(!data?.lat){
+        return usersRef.update({lat, long}).then(() => {}).catch(() => {})
     }
-    return usersRef.update(latLong).then(() => {}).catch(() => {})
 }
 
 const updateDriverStatus = (areaCode, phoneNumber, status) => {
