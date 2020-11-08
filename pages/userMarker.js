@@ -15,7 +15,7 @@ export default props => {
     getLocations = async () => {
         if(!props.userInfo.areaCode)
             return;
-        let driverRef = getDriverLocations(props.userInfo.areaCode);
+        let driverRef = getDriverLocations(props.userInfo);
         driverRef.on('value', (response) => {
             var data = response.val();
             if(!data)

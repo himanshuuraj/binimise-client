@@ -5,8 +5,8 @@ import { setData } from "./../redux/action";
 import { View, Text, Touch, TextInput } from "./../ui-kit";
 import { Actions } from 'react-native-router-flux';
 import Header from "./../components/header";
-import { updateUserData, getAllAreas, updateUserInArea, updateMapAreaCodeAndDriver } from "./../repo/repo";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
+import { updateUserData, getAllAreas, updateUserInArea, updateMapAreaCodeAndDriver } from "./../repo/repo";
 
 let { height } = Dimensions.get('window');
 
@@ -14,13 +14,9 @@ const initialState = {
     name : "",
     phoneNumber : "",
     email : "",
-    city : "",
-    state : "",
-    pincode : "",
     userType : "user",
-    truckName : "",
-    truckId : "",
-    areaCode : ""
+    areaCode : "",
+    municipality : ""
 }
   
 const reducer = (state, { field, value }) => {
@@ -51,7 +47,7 @@ const reducer = (state, { field, value }) => {
 export default () => {
 
     const [state, dispatchStateAction] = useReducer(reducer, initialState);
-    const [areas, setAreas] = useState([]);
+    const [areas, setAreas] = useState({});
 
     const dispatch = useDispatch();
     const setDataAction = (arg) => dispatch(setData(arg));
@@ -63,7 +59,7 @@ export default () => {
 
     useEffect(() => {
         getAreas();
-    }, [areas.length])
+    }, [])
 
     getAreas = async () => {
         let areaList = await getAllAreas();
@@ -87,9 +83,8 @@ export default () => {
     validateUserInfo = () => {
         let message = "Please enter ";
         for(let key in initialState) {
-            if(state.userType !== "driver" &&
-                (key == "truckId" || key == "truckName"))
-                    continue;
+            if(key == "email")
+                continue;
             if(!state[key]){
                 message += key;
                 showErrorModalMsg(message);
@@ -101,16 +96,18 @@ export default () => {
 
     updateUserInfo = async () => {
         try {
+
             setDataAction({ loading : { show : true }});
             let userInfo = JSON.parse(JSON.stringify(state));
+            if(!userInfo.areaCode) {
+                userInfo.areaCode = Object.entries(areas[state.municipality].wards)[0][0];
+            }
             userInfo["firebaseToken"] = await AsyncStorage.getItem("firebaseToken");
             await updateUserData(userInfo);
             await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
             Actions.MapView();
             updateUserInArea(userInfo);
             setDataAction({ loading : { show : false }, userInfo });
-            if(userInfo.truckId)
-                updateMapAreaCodeAndDriver(userInfo);
         }catch(err) {
             showErrorModalMsg("Error while updating userData");
         }
@@ -136,8 +133,7 @@ export default () => {
                 <Header />
             </View> : null
         }
-        <View jc ai pl={16} pr={16}>
-            <View h={100} />
+        <View jc ai h={height} pl={16} pr={16}>
             <Text b s={18} t={"DETAILS"} />
             <View pt={16} pb={8} ph={8} w={'100%'}>
                 <Text t={'Name'} />
@@ -153,49 +149,39 @@ export default () => {
                 <TextInput ml nl={2} uc={"#bbb"} ph="abc@def.com" pl={16}
                 onChangeText={formOnChangeText} name={'email'}
                 value={state.email}/>
-                <Text t={'City'} />
-                <TextInput ml nl={2} uc={"#bbb"} ph="Bangalore" pl={16}
-                onChangeText={formOnChangeText} name={'city'}
-                value={state.city}/>
-                <Text t={'State'} />
-                <TextInput ml nl={2} uc={"#bbb"} ph="State" pl={16}
-                onChangeText={formOnChangeText} name={'state'}
-                value={state.state}/>
-                <Text t={'Pincode'} />
-                <TextInput ml nl={2} uc={"#bbb"} ph="Pincode" pl={16}
-                onChangeText={formOnChangeText} name={'pincode'}
-                k={"numeric"}
-                value={state.pincode}/>
-                <Text t={'Select your ward'} />
+                <Text t={'Select your municipality'} />
                 <Picker
-                    selectedValue={state.areaCode}
+                    selectedValue={state.municipality}
                     style={{ height: 50, width: "100%" }}
-                    onValueChange={(itemValue, itemIndex) => formOnChangeText("areaCode", itemValue)}
+                    onValueChange={(itemValue, itemIndex) => formOnChangeText("municipality", itemValue)}
                 >
                     {
-                        areas.map((item, index) => {
-                            return <Picker.Item key={index} label={item.value} value={item.id} />
+                        Object.entries(areas).map((item, index) => {
+                            return <Picker.Item key={index} label={item[0]} value={item[0]} />
                         })
                     }
                 </Picker>
-                {/* <Text t={'User or Driver'} /> */}
-                {/* <Picker
-                    selectedValue={state.userType}
-                    style={{ height: 50, width: "100%" }}
-                    onValueChange={(itemValue, itemIndex) => formOnChangeText("userType", itemValue)}
-                >
-                    <Picker.Item label="Driver" value="driver" />
-                    <Picker.Item label="User" value="user" />
-                </Picker> */}
-                {/* {
-                    driverLayout()
-                } */}
+                <Text t={'Select your ward'} />
+                {
+                    state.municipality ? <Picker
+                        selectedValue={state.areaCode}
+                        style={{ height: 50, width: "100%" }}
+                        onValueChange={(itemValue, itemIndex) => formOnChangeText("areaCode", itemValue)}
+                    >
+                        {
+                            Object.entries(areas[state.municipality].wards).map((item, index) => {
+                                return <Picker.Item key={index} label={item[0]} value={item[0]} />
+                            })
+                        }
+                    </Picker> : null
+                }
                 <Touch g w={'100%'} mb={16} br={4}
                     onPress={() => {
                         if(!validateUserInfo()){
                             updateUserInfo();
                         }
                     }} s={16} c={"#fff"} t={'SUBMIT'}/>
+                <View h={100} />
             </View>
         </View>
     </KeyboardAwareScrollView>

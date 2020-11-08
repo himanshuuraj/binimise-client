@@ -23,7 +23,6 @@ export default () => {
 
   const dispatch = useDispatch();
   const setDataAction = (arg) => dispatch(setData(arg));
-  let { isDriverOn } = useSelector(state => state.testReducer) || {};
 
   useEffect(() => {
     getUserInfo();
@@ -77,7 +76,7 @@ export default () => {
   };
 
   syncUserLocation = location => {
-    if(!isDriver && location.coords.latitude){
+    if(location.coords.latitude){
       updateUserLocation(location.coords.latitude, location.coords.longitude, userInfo.phoneNumber);
       setDataAction(location);
       updateUserLocationInWard(userInfo, location.coords.latitude, location.coords.longitude);

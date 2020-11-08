@@ -47,8 +47,8 @@ const updateTruckHistory = (lat, long, truckId) => {
     return usersRef.update(latLong).then(() => {}).catch(() => {})
 }
 
-const getDriverLocations = (areaCode) => {
-    return dbRef.child('areaCode/'+ areaCode + "/" + getCurrentDate());
+const getDriverLocations = userInfo => {
+    return dbRef.child('mun/' + userInfo.municipality + "/wards/" +userInfo.areaCode + "/" + getCurrentDate());    
 }
 
 const getUserData = phoneNumber => {
@@ -57,7 +57,7 @@ const getUserData = phoneNumber => {
 }
 
 const getAllAreas = () => {
-    let usersRef = dbRef.child('areas/');
+    let usersRef = dbRef.child('munVsWards/');
     return usersRef.once('value', data => data);
 } 
 
