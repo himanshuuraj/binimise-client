@@ -21,8 +21,8 @@ let arrayOfItems = [
 
 export default () => {
 
-      const dispatch = useDispatch();
-      const setDataAction = (arg) => dispatch(setData(arg));
+    const dispatch = useDispatch();
+    const setDataAction = (arg) => dispatch(setData(arg));
 
     let { sidebar, userInfo } = useSelector(state => state.testReducer) || {};
 
