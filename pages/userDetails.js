@@ -163,7 +163,7 @@ export default () => {
                 </Picker>
                 <Text t={'Select your ward'} />
                 {
-                    state.municipality ? <Picker
+                    (state.municipality && areas && areas[state.municipality]) ? <Picker
                         selectedValue={state.areaCode}
                         style={{ height: 50, width: "100%" }}
                         onValueChange={(itemValue, itemIndex) => formOnChangeText("areaCode", itemValue)}
