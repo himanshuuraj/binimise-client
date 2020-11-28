@@ -114,7 +114,6 @@ export default () => {
     }
 
     driverLayout = () => {
-        // if (state.userType !== "driver") return null;
         return <View>
             <Text t={'Truck Name'} />
             <TextInput ml nl={2} uc={"#bbb"} ph="Truck Name" pl={16}
@@ -169,9 +168,10 @@ export default () => {
                         onValueChange={(itemValue, itemIndex) => formOnChangeText("areaCode", itemValue)}
                     >
                         {
-                            Object.entries(areas[state.municipality].wards).map((item, index) => {
-                                return <Picker.Item key={index} label={item[0]} value={item[0]} />
-                            })
+                            Object.entries(areas[state.municipality].wards).
+                                map(item => item[1].value).
+                                sort((a,b) => parseInt(a.replace('ward', '')) > parseInt(b.replace('ward', ''))).
+                                map((item, index) => <Picker.Item key={index} label={item} value={item} />)
                         }
                     </Picker> : null
                 }

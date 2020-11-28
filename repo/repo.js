@@ -62,7 +62,8 @@ const getAllAreas = () => {
 } 
 
 const updateUserInArea = userInfo => {
-    let usersRef = dbRef.child('areaCode/' + userInfo.areaCode + "/users/" + userInfo.phoneNumber);
+    if(!userInfo.municipality) return;
+    let usersRef = dbRef.child('mun/' + userInfo.municipality + "/wards/" +userInfo.areaCode + "/users/" + userInfo.phoneNumber);    
     return usersRef.update(userInfo).then(() => {}).catch(() => {})
 }
 
